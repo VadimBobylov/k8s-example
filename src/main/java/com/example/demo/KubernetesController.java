@@ -17,6 +17,6 @@ public class KubernetesController {
     @SneakyThrows
     public Info getInfo() {
         words.add(new Faker().lorem().sentence(4));
-        return new Info(InetAddress.getLocalHost().toString(), words);
+        return new Info(InetAddress.getLocalHost().toString(), words,"new latest");
     }
 }

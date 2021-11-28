@@ -12,4 +12,5 @@ import java.util.List;
 public class Info {
     String systemIP;
     List<String> words;
+    String version;
 }
