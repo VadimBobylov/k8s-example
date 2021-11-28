@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spring-demo
+spec:
+  containers:
+    - name: container-apache
+      image: vadim1bobylov/springk8s:latest
+      ports:
+        - containerPort: 8080
