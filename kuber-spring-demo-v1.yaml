@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
     - name: sping-container
-      image: vadim1bobylov/springk8s:latestge
+      image: vadim1bobylov/springk8s:latest
       ports:
         - containerPort: 8080
     - name: container-apache
