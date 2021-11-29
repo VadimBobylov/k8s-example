@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deploy-autoscaling #должно совпадать
+  labels:
+    app: my-k8s-deployment
+spec:
+  replicas: 3 # можно убрать так как мы будем делать autoscaling
+  selector:
+    matchLabels:
+      project: xyz
+  template:
+    metadata:
+      labels:
+        project: xyz
+    spec:
+      containers:
+        - name: xyz-web
+          image: adv4000/k8sphp
+          ports:
+            - containerPort: 80
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2beta1v1
+    kind: Deployment
+    name: my-web-deploy-autoscaling # должно совпадать
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-autoscaling-service
+  labels:
+    env: prod
+    owner: VadimBobylov
+spec:
+  selector:
+    project: xyz
+  ports:
+    - name: app-listener
+      protocol: TCP
+      port: 8888
+      targetPort: 80
+  type: LoadBalancer
