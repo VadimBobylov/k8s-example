@@ -1,0 +1,40 @@
+#create deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app: my-k8s-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: kgb
+  template:
+    metadata:
+      labels:
+        project: kgb #service will look for those pods labels
+    spec:
+      containers:
+        - name: kgb-web
+          image: vadim2bobylov/k8s:php
+          ports:
+            - containerPort: 80
+---
+#create service
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-single-service
+  labels:
+    env: prod
+    owner: VadimBobylov
+spec:
+  selector:
+    project: kgb # selecting pods with those labels
+  ports:
+    - name: app-listener
+      protocol: TCP
+      port: 80 # port on load balancer
+      targetPort: 80 # port on POD
+  type: LoadBalancer # define type
